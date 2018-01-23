@@ -1,0 +1,21 @@
+{
+	"SourceSolver" : {
+	    "Source": "Caffe",
+	    "ModelPath": "./pose_deploy.prototxt",
+	    "WeightsPath": "./pose_iter_440000.caffemodel",
+    	"PHASE": 1
+	},
+    "ModelSolver": {
+    	"CNTKModelPath": "./pose_net.cntkmodel"
+    },
+	"ValidSolver": {
+		"SavePath": "./Valid",
+		"ValInputs": {
+			"data": [[-0.5, 0.5], []]
+		},
+		"ValNodes": {
+			"Mconv7_stage6_L1": "Mconv7_stage6_L1",
+			"Mconv7_stage6_L2": "Mconv7_stage6_L2"
+		}
+	}
+}
