@@ -2,3 +2,12 @@
 python/sample.jpg
 *.cntkmodel
 *.caffemodel
+.DS_Store
+.bash_history
+.viminfo
+.pycharm_helpers/
+.ssh
+.cache/
+/.vim/
+/.pip/
+/.config/

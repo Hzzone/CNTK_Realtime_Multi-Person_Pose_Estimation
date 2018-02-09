@@ -1,2 +1,3 @@
 from cntk.contrib.crosstalkcaffe import CaffeConverter
-CaffeConverter.from_model("../AlexNet_ImageNet/global.json")
+import caffe
+CaffeConverter.from_model("./global.json")
