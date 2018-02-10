@@ -1,6 +1,5 @@
 .idea
 python/sample.jpg
-*.cntkmodel
 *.caffemodel
 .DS_Store
 .bash_history
