@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import cntk as C
 from cntk import load_model, combine, CloneMethod
 from cntk.layers import placeholder
@@ -6,14 +7,17 @@ from cntk.logging.graph import find_by_name
 import cv2 as cv
 import numpy as np
 import math
-
 import time
 import util
 import matplotlib
 import pylab as plt
+import os
+
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-base_model = load_model("../model/pose_net.cntkmodel")
+# base_model = load_model("../model/pose_net.cntkmodel")
+base_model = load_model(os.path.join(base_dir, "model", "pose_net.cntkmodel"))
 data = C.input_variable(shape=(3, C.FreeDimension, C.FreeDimension), name="data")
 def clone_model(base_model, from_node_names, to_node_names, clone_method):
     from_nodes = [find_by_name(base_model, node_name) for node_name in from_node_names]
@@ -42,28 +46,29 @@ padValue = 128
 thre1 = 0.1
 thre2 = 0.05
 
-test_image = '../sample/ski.jpg'
+# test_image = '../sample/ski.jpg'
+test_image = os.path.join(base_dir, 'sample', 'ski.jpg')
 oriImg = cv.imread(test_image)  # B,G,R order
-print "oriImg shape: ", oriImg.shape
+print("oriImg shape: ", oriImg.shape)
 multiplier = [x * boxsize / oriImg.shape[0] for x in scale_search]
-print "multiplier: ", multiplier
+print("multiplier: ", multiplier)
 
 
 heatmap_avg = np.zeros((oriImg.shape[0], oriImg.shape[1], 19))
 paf_avg = np.zeros((oriImg.shape[0], oriImg.shape[1], 38))
-print "heatmap_avg: ", heatmap_avg.shape, "paf_avg: ", paf_avg.shape
+print("heatmap_avg: ", heatmap_avg.shape, "paf_avg: ", paf_avg.shape)
 
 for m in range(len(multiplier)):
     scale = multiplier[m]
     imageToTest = cv.resize(oriImg, (0, 0), fx=scale, fy=scale, interpolation=cv.INTER_CUBIC)
-    print "imageToTest: ", imageToTest.shape
+    print("imageToTest: ", imageToTest.shape)
     imageToTest_padded, pad = util.padRightDownCorner(imageToTest, stride, padValue)
-    print "imageToTest_padded: ", imageToTest_padded.shape, "pad: ", pad
+    print("imageToTest_padded: ", imageToTest_padded.shape, "pad: ", pad)
     im = np.transpose(np.float32(imageToTest_padded[:, :, :, np.newaxis]), (3, 2, 0, 1)) / 256 - 0.5
     im = np.ascontiguousarray(im)
     start_time = time.time()
     output = pred_net.eval({pred_net.arguments[0]: [im]})
-    print "Mconv7_stage6_L1: ", output[Mconv7_stage6_L1].shape, "Mconv7_stage6_L2: ", output[Mconv7_stage6_L2].shape
+    print("Mconv7_stage6_L1: ", output[Mconv7_stage6_L1].shape, "Mconv7_stage6_L2: ", output[Mconv7_stage6_L2].shape)
     # print output[Mconv7_stage6_L2]
     print('At scale %.2f, The CNN took %.2f ms.' % (scale_search[m], 1000 * (time.time() - start_time)))
 
@@ -209,7 +214,7 @@ for k in range(len(mapIdx)):
                     subset[j][-2] += candidate[partBs[i].astype(int), 2] + connection_all[k][i][2]
             elif found == 2:  # if found 2 and disjoint, merge them
                 j1, j2 = subset_idx
-                print "found = 2"
+                print("found = 2")
                 membership = ((subset[j1] >= 0).astype(int) + (subset[j2] >= 0).astype(int))[:-2]
                 if len(np.nonzero(membership == 2)[0]) == 0:  # merge
                     subset[j1][:-2] += (subset[j2][:-2] + 1)
@@ -271,5 +276,6 @@ for i in range(17):
         cv.fillConvexPoly(cur_canvas, polygon, colors[i])
         canvas = cv.addWeighted(canvas, 0.4, cur_canvas, 0.6, 0)
 
-plt.imsave("../sample/preview.jpg", canvas[:, :, [2, 1, 0]])
+# plt.imsave("../sample/preview.jpg", canvas[:, :, [2, 1, 0]])
+plt.imsave(os.path.join(base_dir, "sample", "preview.jpg"), canvas[:, :, [2, 1, 0]])
 

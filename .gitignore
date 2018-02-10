@@ -10,3 +10,4 @@ python/sample.jpg
 /.vim/
 /.pip/
 /.config/
+*.pyc
