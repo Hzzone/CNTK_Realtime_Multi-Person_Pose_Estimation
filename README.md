@@ -2,8 +2,16 @@
 
 This is a [CNTK](https://github.com/Microsoft/CNTK) implementation of **Realtime Multi-Person Pose Estimation**, origin code is here <https://github.com/ZheC/Realtime_Multi-Person_Pose_Estimation>
 
+## Requirements
+```
+CNTK>=2.3
+matplotlib
+opencv-python
+```
+or run `pip3 install -r requirements.txt`.
+
 ## Results
-Run `python3/python demo.py` to see the result if you have cntk and other requirements installed.  
+Run `python3/python demo.py` to see the result if you have cntk and other requirements installed.   <br>
 ![](sample/ski.jpg)
 ![](sample/preview.jpg)
 
