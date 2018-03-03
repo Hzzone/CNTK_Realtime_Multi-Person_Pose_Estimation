@@ -12,6 +12,9 @@ import util
 import matplotlib
 import pylab as plt
 import os
+from numpy import ma
+from scipy.ndimage.filters import gaussian_filter
+
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -38,7 +41,7 @@ Mconv7_stage6_L1 = pred_net.outputs[0]
 Mconv7_stage6_L2 = pred_net.outputs[1]
 
 
-# scale_search = [0.5, 1, 1.5, 2]
+# scale_search = [0.5, 1.0, 1.5, 2.0]
 scale_search = [0.5]
 boxsize = 368
 stride = 8
@@ -88,7 +91,6 @@ for m in range(len(multiplier)):
     heatmap_avg = heatmap_avg + heatmap / len(multiplier)
     paf_avg = paf_avg + paf / len(multiplier)
 
-from numpy import ma
 
 U = paf_avg[:, :, 16] * -1
 V = paf_avg[:, :, 17]
@@ -99,7 +101,6 @@ U = ma.masked_array(U, mask=M)
 V = ma.masked_array(V, mask=M)
 
 
-from scipy.ndimage.filters import gaussian_filter
 
 all_peaks = []
 peak_counter = 0
@@ -121,7 +122,7 @@ for part in range(19 - 1):
 
     peaks_binary = np.logical_and.reduce(
         (map >= map_left, map >= map_right, map >= map_up, map >= map_down, map > thre1))
-    peaks = zip(np.nonzero(peaks_binary)[1], np.nonzero(peaks_binary)[0])  # note reverse
+    peaks = list(zip(np.nonzero(peaks_binary)[1], np.nonzero(peaks_binary)[0]))  # note reverse
     peaks_with_score = [x + (map_ori[x[1], x[0]],) for x in peaks]
     id = range(peak_counter, peak_counter + len(peaks))
     peaks_with_score_and_id = [peaks_with_score[i] + (id[i],) for i in range(len(id))]
@@ -157,8 +158,8 @@ for k in range(len(mapIdx)):
                 norm = math.sqrt(vec[0] * vec[0] + vec[1] * vec[1])
                 vec = np.divide(vec, norm)
 
-                startend = zip(np.linspace(candA[i][0], candB[j][0], num=mid_num), \
-                               np.linspace(candA[i][1], candB[j][1], num=mid_num))
+                startend = list(zip(np.linspace(candA[i][0], candB[j][0], num=mid_num), \
+                               np.linspace(candA[i][1], candB[j][1], num=mid_num)))
 
                 vec_x = np.array([score_mid[int(round(startend[I][1])), int(round(startend[I][0])), 0] \
                                   for I in range(len(startend))])
