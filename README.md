@@ -23,6 +23,13 @@ Run `python3/python demo.py` to see the result if you have cntk and other requir
 ![](sample/ski.jpg)
 ![](sample/preview.jpg)
 
+## Running
+
+For images run `python run_image.py --image ../sample/ski.jpg` <br>
+![](sample/preview.jpg)
+
+For videos run `python run_video.py --video ../sample/lucas.m4v` <br>
+![](sample/lucas.jpg)
 
 ------
 
